@@ -1,0 +1,30 @@
+{
+    "name": "virge/events",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/siosphere/virge-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/siosphere/virge-orm"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/siosphere/virge-cli"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/siosphere/virge-db"
+        }
+    ],
+    "require": {
+        "virge/core": "dev-master",
+        "virge/orm": "dev-master",
+        "virge/cli-db": "dev-master",
+        "virge/cli": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {"Virge\\": "Virge/"}
+    }
+}
