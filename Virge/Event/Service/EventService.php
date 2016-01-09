@@ -27,7 +27,7 @@ class EventService {
     public function signalAsync(Event $event, $runAt = null) {
         
         $event->setClassName(get_class($event));
-        $event->setName($event::EVENT_NAME);
+        $event->setName(get_class($event));
         $event->setRunAt($runAt);
         $event->setParams(json_encode($event));
         $event->save();
