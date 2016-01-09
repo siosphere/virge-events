@@ -33,7 +33,7 @@ class Dispatcher {
      * @param \Virge\Event\Model\Event $event
      */
     public static function dispatch(Event $event) {
-        $eventName = $event::EVENT_NAME;
+        $eventName = get_class($event);
         
         self::startEvent($event);
         
