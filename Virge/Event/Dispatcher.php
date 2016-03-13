@@ -24,7 +24,6 @@ class Dispatcher {
             self::$listeners[$eventName] = array();
         }
         
-        
         self::$listeners[$eventName][] = new Listener($eventName, $callable, $method);
     }
     
@@ -46,7 +45,9 @@ class Dispatcher {
         ob_start();
         
         foreach(self::$listeners[$eventName] as $listener) {
-            
+            if(!$event->shouldPropagate()) {
+                continue;
+            }
             $listener->listen($event);
         }
         
