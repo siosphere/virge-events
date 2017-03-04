@@ -12,7 +12,7 @@ class Event extends \Virge\Core\Model
     
     /**
      * Stop this event from propagating to any other listeners
-     * @return \Virge\Event\Model\Event
+     * @return \Virge\Event\Component\Event
      */
     public function stopPropagation()
     {

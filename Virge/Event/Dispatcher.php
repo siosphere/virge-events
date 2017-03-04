@@ -2,9 +2,9 @@
 namespace Virge\Event;
 
 use Virge\Event\Component\Listener;
+use Virge\Event\Component\Event;
 use Virge\Event\Model\{
-    AsyncEvent,
-    Event
+    AsyncEvent
 };
 use Virge\Event\Service\EventService;
 use Virge\Virge;
@@ -35,7 +35,7 @@ class Dispatcher
     
     /**
      * Dispatch an event to any registered listeners
-     * @param \Virge\Event\Model\Event $event
+     * @param \Virge\Event\Component\Event $event
      */
     public static function dispatch(Event $event) 
     {

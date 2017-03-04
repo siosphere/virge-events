@@ -1,7 +1,7 @@
 <?php
 namespace Virge\Event\Component;
 
-use Virge\Event\Model\Event;
+use Virge\Event\Component\Event;
 
 use Virge\Virge;
 
