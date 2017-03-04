@@ -11,7 +11,7 @@ Schema::create(function() {
     Schema::timestamp('run_at');
     Schema::timestamp('started_on');
     Schema::timestamp('ended_on');
-    Schema::timestamp('started_by');
+    Schema::string('started_by');
     Schema::text('output');
     Schema::int('attempts');
 
