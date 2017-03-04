@@ -4,9 +4,12 @@
         "virge/core": "dev-master",
         "virge/orm": "dev-master",
         "virge/db": "dev-master",
-        "virge/cli": "dev-master"
+        "virge/cli": "dev-master",
+        "virge/api": "dev-master",
+        "virge/graphite": "dev-master"
     },
     "autoload": {
         "psr-4": {"Virge\\": "Virge/"}
-    }
+    },
+    "minimum-stability": "dev"
 }

@@ -2,16 +2,21 @@
 namespace Virge\Event;
 
 use Virge\Event\Component\Listener;
-use Virge\Event\Model\Event;
+use Virge\Event\Model\{
+    AsyncEvent,
+    Event
+};
+use Virge\Event\Service\EventService;
+use Virge\Virge;
 
 /**
- * 
- * @author Michael Kramer
+ * Used to Dispatch events, and queue Async Events, as well as 
+ * register listeners
  */
-
-class Dispatcher {
+class Dispatcher
+{
     
-    protected static $listeners = array();
+    protected static $listeners = [];
     
     /**
      * Attach a listener on the given event name
@@ -19,7 +24,8 @@ class Dispatcher {
      * @param mixed $callable
      * @param string|null $method
      */
-    public static function listen($eventName, $callable, $method = null) {
+    public static function listen($eventName, $callable, $method = null) 
+    {
         if(!isset(self::$listeners[$eventName])){
             self::$listeners[$eventName] = array();
         }
@@ -31,16 +37,13 @@ class Dispatcher {
      * Dispatch an event to any registered listeners
      * @param \Virge\Event\Model\Event $event
      */
-    public static function dispatch(Event $event) {
+    public static function dispatch(Event $event) 
+    {
         $eventName = get_class($event);
         
-        self::startEvent($event);
-        
         if(!isset(self::$listeners[$eventName])){
-            self::endEvent($event, 'No registered listeners');
-            return false;
+            return 'No registered listeners';
         }
-        
         
         ob_start();
         
@@ -53,24 +56,34 @@ class Dispatcher {
         
         $output = ob_get_contents();
         ob_end_clean();
-        
-        self::endEvent($event, $output);
+
+        return $output;
+    }
+
+    public static function async(Event $event, \DateTime $runAt = null)
+    {
+        if(!$runAt) {
+            $runAt = new \DateTime;
+        }
+
+        $asyncEvent = new AsyncEvent();
+
+        $params = self::getEventService()->getEventParameters($event);
+
+        $params = json_encode($params);
+
+        $asyncEvent
+            ->setRunAt($runAt)
+            ->setStatus(AsyncEvent::STATUS_SCHEDULED)
+            ->setClassName(get_class($event))
+            ->setParams($params)
+        ;
+
+        return $asyncEvent->save();
     }
     
-    protected static function startEvent(Event $event) {
-        if(!$event->isAsync()){
-            return;
-        }
-        $event->setStartedOn(new \DateTime);
-        $event->save();
-    }
-    
-    protected static function endEvent(Event $event, $output = null) {
-        if(!$event->isAsync()){
-            return;
-        }
-        $event->setEndedOn(new \DateTime);
-        $event->setOutput($output);
-        $event->save();
+    protected static function getEventService() : EventService
+    {
+        return Virge::service(EventService::SERVICE_ID);
     }
 }
