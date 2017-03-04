@@ -25,13 +25,15 @@ class EventRunnerService
         }
 
         $asyncEvent
+            ->setStatus(AsyncEvent::STATUS_PROCESSING)
             ->setStartedOn(new \DateTime)
             ->setStartedBy(sprintf('%s:%s', gethostname(), getmypid()))
             ->save()
         ;
         try {
             $output = Dispatcher::dispatch($event);
-            $asyncEvent->setEndedOn(new \DateTime)
+            return $asyncEvent->setEndedOn(new \DateTime)
+                ->setStatus(AsyncEvent::STATUS_OK)
                 ->setOutput($output)
                 ->save()
             ;
@@ -41,6 +43,7 @@ class EventRunnerService
                 ->setOutput($t->getMessage())
                 ->save()
             ;
+            return false;
         }
     }
 
