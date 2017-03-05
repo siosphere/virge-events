@@ -9,6 +9,7 @@ use Virge\Event\Model\{
 };
 use Virge\Event\Service\EventService;
 use Virge\Event\Task\RunAsyncEventTask;
+use Virge\Graphite\Service\QueueService;
 use Virge\Virge;
 
 class EventRunnerService
