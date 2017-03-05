@@ -1,12 +1,14 @@
 <?php
 namespace Virge\Event\Service;
 
+use Virge\Core\Config;
 use Virge\Event\Dispatcher;
 use Virge\Event\Model\{
     AsyncEvent, 
     Event
 };
 use Virge\Event\Service\EventService;
+use Virge\Event\Task\RunAsyncEventTask;
 use Virge\Virge;
 
 class EventRunnerService
@@ -47,8 +49,20 @@ class EventRunnerService
         }
     }
 
+    public function queueEvent(AsyncEvent $asyncEvent)
+    {
+        $this->getQueueService()->push(Config::get('app', 'async_event_queue'), new RunAsyncEventTask($asyncEvent->getId()));
+        $asyncEvent->setStatus(AsyncEvent::STATUS_QUEUED);
+        $asyncEvent->save();
+    }
+
     public function getEventService() : EventService
     {
         return Virge::service(EventService::class);
+    }
+
+    protected function getQueueService() : QueueService
+    {
+        return Virge::service(QueueService::SERVICE_ID);
     }
 }

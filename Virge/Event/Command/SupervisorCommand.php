@@ -3,10 +3,8 @@ namespace Virge\Event\Command;
 
 use Virge\Cli;
 use Virge\Cli\Component\Command;
-use Virge\Core\Config;
 use Virge\Event\Model\AsyncEvent;
-use Virge\Event\Task\RunAsyncEventTask;
-use Virge\Graphite\Service\QueueService;
+use Virge\Event\Service\EventRunnerService;
 use Virge\ORM\Component\Collection;
 use Virge\ORM\Component\Collection\Filter;
 use Virge\Virge;
@@ -38,15 +36,13 @@ class SupervisorCommand extends Command
             Filter::lte('run_at', new \DateTime);
         })->setLimit(1000)->setForUpdate(true);
 
-        while($event = $collection->fetch()) {
-            $this->getQueueService()->push(Config::get('app', 'async_event_queue'), new RunAsyncEventTask($event->getId()));
-            $event->setStatus(AsyncEvent::STATUS_QUEUED);
-            $event->save();
+        while($asyncEvent = $collection->fetch()) {
+            $this->getEventRunnerService()->queueEvent($asyncEvent);
         }
     }
 
-    protected function getQueueService() : QueueService
+    protected function getEventRunnerService() : EventRunnerService
     {
-        return Virge::service(QueueService::SERVICE_ID);
+        return Virge::service(EventRunnerService::class);
     }
 }

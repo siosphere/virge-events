@@ -1,12 +1,16 @@
 <?php
 namespace Virge\Event;
 
+use Virge\Core\Config;
 use Virge\Event\Component\Listener;
 use Virge\Event\Component\Event;
 use Virge\Event\Model\{
     AsyncEvent
 };
-use Virge\Event\Service\EventService;
+use Virge\Event\Service\{
+    EventService,
+    EventRunnerService
+};
 use Virge\Virge;
 
 /**
@@ -79,11 +83,32 @@ class Dispatcher
             ->setParams($params)
         ;
 
-        return $asyncEvent->save();
+        $asyncEventId = $asyncEvent->save();
+
+        if(!$asyncEventId) {
+            return false;
+        }
+        $now = new \DateTime;
+
+        if($runAt <= $now) {
+            //immediately queue it up, in the background
+            try {
+                self::getEventRunnerService()->queueEvent($asyncEvent);
+            } catch(\Throwable $t) {
+                //TODO: Logging
+            }
+        }
+
+        return true;
     }
     
     protected static function getEventService() : EventService
     {
         return Virge::service(EventService::SERVICE_ID);
+    }
+
+    protected static function getEventRunnerService() : EventRunnerService
+    {
+        return Virge::service(EventRunnerService::class);
     }
 }
