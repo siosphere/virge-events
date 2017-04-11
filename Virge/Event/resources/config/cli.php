@@ -7,5 +7,10 @@ use Virge\Event\Command\{
 
 use Virge\Cli;
 
-Cli::add(InitCommand::COMMAND, InitCommand::class);
-Cli::add(SupervisorCommand::COMMAND, SupervisorCommand::class);
+Cli::add(InitCommand::COMMAND, InitCommand::class)
+    ->setHelpText(InitCommand::COMMAND_HELP)
+;
+
+Cli::add(SupervisorCommand::COMMAND, SupervisorCommand::class)
+    ->setHelpText(SupervisorCommand::COMMAND_HELP)
+;

@@ -2,7 +2,10 @@
 namespace Virge\Event\Command;
 
 use Virge\Cli;
-use Virge\Cli\Component\Command;
+use Virge\Cli\Component\{
+    Command,
+    Input
+};
 use Virge\Event\Model\AsyncEvent;
 use Virge\Event\Service\EventRunnerService;
 use Virge\ORM\Component\Collection;
@@ -15,18 +18,20 @@ use Virge\Virge;
 class SupervisorCommand extends Command
 {
     const COMMAND = 'virge:event:supervisor';
+    const COMAND_HELP = 'Run event supervisor to run async events that should process';
 
-    public function run() 
+    public function run(Input $input) 
     {
         if($this->instanceAlreadyRunning()) {
-            Cli::output("Virge::Event Supervisor already running");
+            Cli::error("Virge::Event Supervisor already running");
+            $this->terminate(-1);
         }
 
-        Cli::output("Starting Virge::Event Supervisor");
+        Cli::important("Starting Virge::Event Supervisor");
 
         $this->runAsyncEvents();
 
-        Cli::output("DONE");
+        Cli::success("DONE");
     }
 
     public function runAsyncEvents()
