@@ -18,7 +18,7 @@ use Virge\Virge;
 class SupervisorCommand extends Command
 {
     const COMMAND = 'virge:event:supervisor';
-    const COMAND_HELP = 'Run event supervisor to run async events that should process';
+    const COMMAND_HELP = 'Run event supervisor to run async events that should process';
 
     public function run(Input $input) 
     {
