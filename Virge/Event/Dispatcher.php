@@ -43,7 +43,8 @@ class Dispatcher
      */
     public static function dispatch(Event $event) 
     {
-        $eventName = get_class($event);
+        $eventClass = get_class($event);
+        $eventName = defined("{$eventClass}::VIRGE_EVENT_NAME") ? $eventClass::VIRGE_EVENT_NAME : $eventClass;
         
         if(!isset(self::$listeners[$eventName])){
             return 'No registered listeners';
