@@ -5,7 +5,8 @@ use Virge\Core\Config;
 use Virge\Cli;
 use Virge\Cli\Component\{
     Command,
-    Input
+    Input,
+    Option
 };
 
 class InitCommand extends Command
@@ -17,9 +18,13 @@ class InitCommand extends Command
     {
         Cli::important('Virge::Event');
 
-        Cli::execute('db:schema:commit', [
-            Config::path('Virge\\Event@resources/setup/db/'),
+        $command = new Input();
+        $command->setCommand('virge:db:schema:commit')
+        ->setOptions([
+            'dir' => new Option('dir', Config::path('Virge\\Event@resources/setup/db/')),
         ]);
+
+        Cli::execute($command);
 
         Cli::success('DONE');
     }
