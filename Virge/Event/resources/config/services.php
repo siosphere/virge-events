@@ -7,8 +7,10 @@ use Virge\Event\Service\{
 
 use Virge\Virge;
 
-$eventService = new EventService();
-Virge::registerService(EventService::SERVICE_ID, $eventService);
-Virge::registerService(EventService::class, $eventService);
 
-Virge::registerService(EventRunnerService::class, new EventRunnerService());
+Virge::registerService(EventService::class, EventService::class);
+Virge::registerService(EventService::SERVICE_ID, function() {
+    return Virge::service(EventService::class);
+});
+
+Virge::registerService(EventRunnerService::class, EventRunnerService::class);
